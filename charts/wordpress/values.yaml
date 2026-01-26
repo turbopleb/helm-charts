@@ -124,8 +124,9 @@ customPhpConfig: |
 apachePortsConfig: |
 apacheDefaultSiteConfig: |
 
+# ✅ Inject the WordPress Secret properly
 extraEnvSecrets:
-  - name: wordpress-secrets   # <--- inject your Secret here
+  - name: wordpress-secrets
 
 extraEnvConfigs: []
 extraSecrets: []
@@ -154,10 +155,10 @@ mariadb:
 
 networkPolicy: {}
 
-# Custom wp-config.php config map override
+# ✅ Use your custom wp-config.php
 wpConfig:
   enabled: true
   source:
     configMap:
-      name: wordpress-wp-config   # <--- your ConfigMap with wp-config.php
+      name: wordpress-wp-config
       key: wp-config.php
