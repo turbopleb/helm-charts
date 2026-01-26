@@ -178,7 +178,7 @@ settings:
   existingSecret:
 
   ## The root user password
-  rootPassword:
+  rootPassword: testpw
   #  secretKey:
   #  value:
 
