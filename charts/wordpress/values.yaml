@@ -126,7 +126,7 @@ apacheDefaultSiteConfig: |
 
 # ✅ Inject the WordPress Secret properly
 extraEnvSecrets:
-  - name: wordpress-secrets
+  - wordpress-secrets
 
 extraEnvConfigs: []
 extraSecrets: []
