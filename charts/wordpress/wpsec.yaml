@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wordpress-secrets
+  namespace: mysql
+type: Opaque
+stringData:
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: testpw
+  WORDPRESS_DB_HOST: mysql.mysql.svc.cluster.local:3306
+
+define('AUTH_KEY',         ']+}c$nLdb+e#{hVxCt$w/PW]I+eT5/mDp$x,0^s#7-+CZn>3PR[^VL:w;:iYc^-]');
+define('SECURE_AUTH_KEY',  'lrQvP)&(cR;c$ 0/L+iC9^k,ZVzkOco-t]k&(MC P+KYm}~_+:?AsX;-1:I_/-0+');
+define('LOGGED_IN_KEY',    'Ubrp^5=M6zE]:d?O@AteXH95/i*|+iI!|urNZc-OZcGq_BK$7@}61VVqLwADRdNr');
+define('NONCE_KEY',        '8A<zw-wchk@U:$91jL7BT,e}S@d{vYe,t~OI:8spPkw?7qSZ5b@%U]8A#72zO-k,');
+define('AUTH_SALT',        '~kU0IrJuD%X@?OU]1N<b?wGBCya^qhG|z>ByQ1u^C!X2Eor&!+R8JiK}4:]?.0fX');
+define('SECURE_AUTH_SALT', 'Or, M3ov1L6teU*+xHexBP]Ia|-ACUNAD2jH~6B= U.kuMxz!:w2[-ecyf3[S|m<');
+define('LOGGED_IN_SALT',   'UF-D.3D+9l#C,jj[l1J:HK25dIkBDEO8mTzfA8G]>.)]7g8pY(]=y9AdF_uh5:u?');
+define('NONCE_SALT',       'lX)FgyGDTi5Q0zwB@+P%IPXQ7fX-Su<6E6F!-wYnxW2NfL  QNYmQrXyI;E]@:^T');
