@@ -179,7 +179,6 @@ settings:
 
   ## The root user password
   rootPassword:
-      value: testpw
   #  secretKey:
   #  value:
 
