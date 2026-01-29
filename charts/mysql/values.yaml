@@ -1,39 +1,42 @@
-# values.yaml for MySQL (ArgoCD-ready, all nil pointers fixed)
+# MySQL values.yaml (ArgoCD + K8s ready)
 
 image:
   repository: mysql
   tag: "8.0"
   pullPolicy: IfNotPresent
 
+# Database credentials
 mysqlRootPassword: rootpassword123
 mysqlUser: wpuser
 mysqlPassword: wppassword123
 mysqlDatabase: wordpress
 
+# Service configuration
 service:
   type: ClusterIP
   port: 3306
 
-# Correct storage key for this chart
+# Storage configuration
 storage:
   enabled: true
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
   size: 10Gi
+  name: mysql-data  # Important! Ensures volume and PVC have a valid name
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
 
-# Secure config / secret (leave empty for automatic generation)
+# Secure config / existing secret
 settings:
-  existingSecret: ""
+  existingSecret: ""  # leave empty to auto-generate secrets
 
-# ServiceAccount block to satisfy Helm
+# ServiceAccount block
 serviceAccount:
   create: true
   name: ""
 
-# Liveness, readiness, and startup probes
+# Probes for stability
 livenessProbe:
   enabled: true
   initialDelaySeconds: 30
