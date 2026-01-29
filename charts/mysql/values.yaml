@@ -1,4 +1,4 @@
-# values.yaml for MySQL (ArgoCD-ready, fully fixed)
+# values.yaml for MySQL (ArgoCD-ready, all nil pointers fixed)
 
 image:
   repository: mysql
@@ -33,7 +33,7 @@ serviceAccount:
   create: true
   name: ""
 
-# Optional probes for stability
+# Liveness, readiness, and startup probes
 livenessProbe:
   enabled: true
   initialDelaySeconds: 30
@@ -42,6 +42,11 @@ livenessProbe:
 readinessProbe:
   enabled: true
   initialDelaySeconds: 15
+  periodSeconds: 5
+
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 10
   periodSeconds: 5
 
 # No resource limits
