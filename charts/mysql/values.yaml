@@ -1,4 +1,4 @@
-# values.yaml for MySQL (ArgoCD-ready)
+# values.yaml for MySQL (ArgoCD-ready, fully fixed)
 
 image:
   repository: mysql
@@ -24,9 +24,14 @@ storage:
     whenDeleted: Retain
     whenScaled: Retain
 
-# Settings for secureconfig.yaml
+# Secure config / secret (leave empty for automatic generation)
 settings:
   existingSecret: ""
+
+# ServiceAccount block to satisfy Helm
+serviceAccount:
+  create: true
+  name: ""
 
 # Optional probes for stability
 livenessProbe:
