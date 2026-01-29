@@ -1,28 +1,174 @@
+# ==========================
+# WordPress Helm Values.yaml
+# ==========================
+
 replicaCount: 1
 
 image:
-  repository: wordpress
+  registry: "docker.io"
+  repository: "wordpress"
   pullPolicy: IfNotPresent
+  tag: "6.4-php8.2-apache"  # example tag
 
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+customLabels: {}
+customAnnotations: {}
+
+strategy: {}
+
+# --------------------------
+# Service Account
+# --------------------------
+serviceAccount:
+  create: true
+  name: wordpress-sa
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 33
+  runAsUser: 33
+  runAsNonRoot: true
+
+securityContext:
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  privileged: false
+
+# --------------------------
+# Service
+# --------------------------
 service:
   type: ClusterIP
   port: 80
+  nodePort:
+  clusterIP:
+  loadBalancerIP:
+  loadBalancerSourceRanges: []
+  annotations: {}
+  labels: {}
 
-externalDatabase:
-  host: mysql.mysql.svc.cluster.local   # the MySQL service DNS
-  name: wordpress                        # database name
-  user:
-    secretName: wordpress-db-secret
-    secretKey: username
-  password:
-    secretName: wordpress-db-secret
-    secretKey: password
-
-storage:
-  accessModes:
-    - ReadWriteOnce
-  requestedSize: 1Gi
-  className: standard
-
+# --------------------------
+# Ingress (disabled by default)
+# --------------------------
 ingress:
   enabled: false
+  className:
+  maxBodySize: 64m
+  annotations: {}
+  labels: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  annotations: {}
+
+customStartupProbe: {}
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+  successThreshold: 1
+  periodSeconds: 10
+
+customLivenessProbe: {}
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 5
+  successThreshold: 1
+  periodSeconds: 10
+
+customReadinessProbe: {}
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 5
+  successThreshold: 1
+  periodSeconds: 10
+
+extraInitContainers: []
+extraContainers: []
+
+priorityClassName: ""
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: {}
+revisionHistoryLimit: 10
+
+podDisruptionBudget:
+  minAvailable: 1
+
+containerPort: 80
+env: []
+args: []
+
+# --------------------------
+# External Database (using secret)
+# --------------------------
+externalDatabase:
+  host: "mysql.mysql.svc.cluster.local"
+  user: ""
+  password: ""
+  database: "wordpress"
+  existingSecret: "wordpress-db-secret"
+
+# --------------------------
+# WordPress Settings
+# --------------------------
+settings:
+  tablePrefix: wp_
+  maxFileUploadSize: 64M
+  memoryLimit: 128M
+  configExtra: ""
+
+customPhpConfig: |
+apachePortsConfig: |
+apacheDefaultSiteConfig: |
+
+extraEnvSecrets: []
+extraEnvConfigs: []
+extraSecrets: []
+
+# --------------------------
+# Storage
+# --------------------------
+storage:
+  persistentVolumeClaimName: ""
+  requestedSize: 8Gi
+  className: ""
+  accessModes:
+    - ReadWriteOnce
+  keepPvc: false
+  annotations: {}
+  labels: {}
+
+# --------------------------
+# MariaDB (disabled, using external MySQL)
+# --------------------------
+mariadb:
+  enabled: false
+
+# --------------------------
+# Network Policy (optional)
+# --------------------------
+networkPolicy: {}
