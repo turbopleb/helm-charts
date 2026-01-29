@@ -1,4 +1,4 @@
-# values.yaml for MySQL (ArgoCD ready)
+# values.yaml for MySQL
 
 image:
   repository: mysql
@@ -14,7 +14,8 @@ service:
   type: ClusterIP
   port: 3306
 
-persistence:
+# Correct key for Helm chart
+storage:
   enabled: true
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
@@ -23,10 +24,7 @@ persistence:
     whenDeleted: Retain
     whenScaled: Retain
 
-# No resource limits
-resources: {}
-
-# Liveness and readiness probes (recommended for stability)
+# Optional probes for stability
 livenessProbe:
   enabled: true
   initialDelaySeconds: 30
@@ -36,3 +34,6 @@ readinessProbe:
   enabled: true
   initialDelaySeconds: 15
   periodSeconds: 5
+
+# No resource limits
+resources: {}
