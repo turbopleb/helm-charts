@@ -1,4 +1,4 @@
-# values.yaml for MySQL
+# values.yaml for MySQL (ArgoCD-ready)
 
 image:
   repository: mysql
@@ -14,7 +14,7 @@ service:
   type: ClusterIP
   port: 3306
 
-# Correct key for Helm chart
+# Correct storage key for this chart
 storage:
   enabled: true
   storageClass: "microk8s-hostpath"
@@ -23,6 +23,10 @@ storage:
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
+
+# Settings for secureconfig.yaml
+settings:
+  existingSecret: ""
 
 # Optional probes for stability
 livenessProbe:
