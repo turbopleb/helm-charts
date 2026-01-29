@@ -1,138 +1,28 @@
 replicaCount: 1
 
 image:
-  registry: "docker.io"
-  repository: "wordpress"
+  repository: wordpress
   pullPolicy: IfNotPresent
-  tag: "latest"
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-customLabels: {}
-customAnnotations: {}
-
-serviceAccount:
-  create: false
-  annotations: {}
-  name: ""
-
-podAnnotations: {}
-podLabels: {}
-
-podSecurityContext:
-  fsGroup: 33
-  runAsUser: 33
-  runAsNonRoot: true
-
-securityContext:
-  readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
-  privileged: false
 
 service:
   type: ClusterIP
   port: 80
-  annotations: {}
-  labels: {}
+
+externalDatabase:
+  host: mysql.mysql.svc.cluster.local   # the MySQL service DNS
+  name: wordpress                        # database name
+  user:
+    secretName: wordpress-db-secret
+    secretKey: username
+  password:
+    secretName: wordpress-db-secret
+    secretKey: password
+
+storage:
+  accessModes:
+    - ReadWriteOnce
+  requestedSize: 1Gi
+  className: standard
 
 ingress:
   enabled: false
-  className: ""
-  maxBodySize: 64m
-  annotations: {}
-  labels: {}
-  hosts:
-    - host: wordpress.example.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-resources: {}
-
-autoscaling:
-  enabled: false
-
-customStartupProbe: {}
-startupProbe:
-  enabled: true
-  initialDelaySeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 30
-  successThreshold: 1
-  periodSeconds: 10
-
-customLivenessProbe: {}
-livenessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  timeoutSeconds: 5
-  failureThreshold: 5
-  successThreshold: 1
-  periodSeconds: 10
-
-customReadinessProbe: {}
-readinessProbe:
-  enabled: true
-  initialDelaySeconds: 30
-  timeoutSeconds: 5
-  failureThreshold: 5
-  successThreshold: 1
-  periodSeconds: 10
-
-extraInitContainers: []
-extraContainers: []
-
-priorityClassName: ""
-nodeSelector: {}
-tolerations: []
-affinity: {}
-topologySpreadConstraints: {}
-revisionHistoryLimit: 10
-podDisruptionBudget: {}
-
-containerPort: 8000
-env: []
-args: []
-
-externalDatabase:
-  existingSecret: wordpress-db-secret
-  userKey: username
-  passwordKey: password
-  databaseKey: database
-  hostKey: host
-
-settings:
-  tablePrefix: wp_
-  maxFileUploadSize: 64M
-  memoryLimit: 128M
-  configExtra: ""
-
-customPhpConfig: |
-apachePortsConfig: |
-apacheDefaultSiteConfig: |
-
-extraEnvSecrets: []
-extraEnvConfigs: []
-extraSecrets: []
-
-storage:
-  persistentVolumeClaimName: ""
-  requestedSize: 10Gi
-  className: ""
-  accessModes:
-    - ReadWriteOnce
-  keepPvc: false
-  annotations: {}
-  labels: {}
-
-mariadb:
-  enabled: false
-  settings:
-    rootPassword: ""
-  userDatabase: {}
-  storage: {}
-
-networkPolicy: {}
