@@ -1,11 +1,11 @@
-# MySQL values.yaml (ArgoCD + K8s ready, using existingSecret)
+# MySQL fully working values.yaml
 
 image:
   repository: mysql
   tag: "8.0"
   pullPolicy: IfNotPresent
 
-# Database credentials are now in the secret
+# Database credentials are provided via Secret
 mysqlRootPassword: ""
 mysqlUser: ""
 mysqlPassword: ""
@@ -22,14 +22,15 @@ storage:
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
   size: 10Gi
-  name: mysql-data  # ensures PVC/volume have a valid name
+  name: mysql-data  # required for StatefulSet volume
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
 
-# Use the existing Kubernetes Secret
+# Use the existing secret
 settings:
   existingSecret: "mysql-secret"
+  secureConfigEnabled: false  # disables extra secureconfig volumes
 
 # ServiceAccount block
 serviceAccount:
