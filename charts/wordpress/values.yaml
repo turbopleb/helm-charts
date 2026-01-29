@@ -99,11 +99,10 @@ args: []
 
 externalDatabase:
   existingSecret: wordpress-db-secret
-  user: ""   
-  password: ""   
-  database: ""   
-  host: mysql.mysql.svc.cluster.local
-
+  userKey: username
+  passwordKey: password
+  databaseKey: database
+  hostKey: host
 
 settings:
   tablePrefix: wp_
