@@ -1,4 +1,4 @@
-# values.yaml for WordPress
+# values.yaml for WordPress (ArgoCD ready)
 
 wordpressUsername: admin
 wordpressPassword: adminpassword123
@@ -9,6 +9,7 @@ service:
   type: NodePort
   port: 80
 
+# External database configuration
 externalDatabase:
   host: my-mysql.default.svc.cluster.local
   user: wpuser
@@ -20,6 +21,20 @@ persistence:
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
   size: 10Gi
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
 
 # No resource limits
 resources: {}
+
+# Optional probes (recommended for stability)
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 15
+  periodSeconds: 5
