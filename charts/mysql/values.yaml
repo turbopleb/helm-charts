@@ -6,24 +6,38 @@ image:
 
 serviceAccount:
   create: true
-  name: mysql-sa
+  name: "mysql-sa"
+  annotations: {}
 
-storage:
-  volumeName: "mysql-data"
-  accessModes:
-    - ReadWriteOnce
-  requestedSize: 10Gi
-  className: "microk8s-hostpath"
-  persistentVolumeClaimRetentionPolicy:
-    whenDeleted: Retain
-    whenScaled: Retain
+podManagementPolicy: OrderedReady
+updateStrategyType: RollingUpdate
+
+podSecurityContext:
+  fsGroup: 999
+  supplementalGroups: [999]
+
+securityContext:
+  allowPrivilegeEscalation: false
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 999
+  runAsUser: 999
+  capabilities:
+    drop: [ALL]
+
+service:
+  type: ClusterIP
+  port: 3306
+  nodePort: null
+  clusterIP: null
+  loadBalancerIP: null
+  loadBalancerSourceRanges: []
   annotations: {}
   labels: {}
 
-settings:
-  rootPassword:
-    value: "mypassword"
-  allowEmptyRootPassword: false
+resources: {}
+initResources: {}
 
 startupProbe:
   enabled: true
@@ -49,19 +63,28 @@ readinessProbe:
   successThreshold: 1
   periodSeconds: 10
 
-podManagementPolicy: OrderedReady
-updateStrategyType: RollingUpdate
-podSecurityContext:
-  fsGroup: 999
-  supplementalGroups:
-    - 999
-securityContext:
-  allowPrivilegeEscalation: false
-  privileged: false
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsGroup: 999
-  runAsUser: 999
-  capabilities:
-    drop:
-      - ALL
+settings:
+  rootPassword:
+    value: "mypassword"
+  allowEmptyRootPassword: false
+  skipTZInfo: false
+
+storage:
+  volumeName: "mysql-data"
+  accessModes: [ReadWriteOnce]
+  requestedSize: 10Gi
+  className: "microk8s-hostpath"
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  annotations: {}
+  labels: {}
+
+extraInitContainers: []
+extraContainers: []
+env: []
+extraEnvSecrets: []
+extraSecretConfigs: []
+extraScripts: []
+extraSecrets: []
+extraConfigs: []
