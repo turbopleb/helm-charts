@@ -1,42 +1,67 @@
 image:
   registry: "docker.io"
-  repository: "wordpress"
+  repository: "mysql"
   pullPolicy: IfNotPresent
-  tag: "6.4-apache"
+  tag: "8.0"
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+serviceAccount:
+  create: true
+  name: mysql-sa
 
-service:
-  type: NodePort
-  port: 80
-  nodePort: 30080
+storage:
+  volumeName: "mysql-data"
+  accessModes:
+    - ReadWriteOnce
+  requestedSize: 10Gi
+  className: "microk8s-hostpath"
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
   annotations: {}
   labels: {}
 
-resources: {}
+settings:
+  rootPassword:
+    value: "mypassword"
+  allowEmptyRootPassword: false
 
-ingress:
-  enabled: false
-
-wordpressUsername: admin
-wordpressPassword: adminpass
-wordpressEmail: tobbe.sjogren@hotmail.com
-wordpressBlogName: "TestPage"
-
-mariadb:
-  enabled: false   # disable the bundled MariaDB
-
-externalDatabase:
-  host: mysql.mysql.svc.cluster.local
-  user: wpuser
-  password: wppass
-  database: wordpress
-  port: 3306
-
-persistence:
+startupProbe:
   enabled: true
-  accessMode: ReadWriteOnce
-  size: 10Gi
-  storageClass: "microk8s-hostpath"
+  initialDelaySeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+  successThreshold: 1
+  periodSeconds: 10
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+  periodSeconds: 10
+
+podManagementPolicy: OrderedReady
+updateStrategyType: RollingUpdate
+podSecurityContext:
+  fsGroup: 999
+  supplementalGroups:
+    - 999
+securityContext:
+  allowPrivilegeEscalation: false
+  privileged: false
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 999
+  runAsUser: 999
+  capabilities:
+    drop:
+      - ALL
