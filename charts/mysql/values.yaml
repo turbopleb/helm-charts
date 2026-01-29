@@ -1,4 +1,4 @@
-# values.yaml for MySQL
+# values.yaml for MySQL (ArgoCD ready)
 
 image:
   repository: mysql
@@ -19,6 +19,20 @@ persistence:
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
   size: 10Gi
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
 
 # No resource limits
 resources: {}
+
+# Liveness and readiness probes (recommended for stability)
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 15
+  periodSeconds: 5
