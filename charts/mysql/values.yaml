@@ -1,15 +1,15 @@
-# MySQL values.yaml (ArgoCD + K8s ready)
+# MySQL values.yaml (ArgoCD + K8s ready, using existingSecret)
 
 image:
   repository: mysql
   tag: "8.0"
   pullPolicy: IfNotPresent
 
-# Database credentials
-mysqlRootPassword: rootpassword123
-mysqlUser: wpuser
-mysqlPassword: wppassword123
-mysqlDatabase: wordpress
+# Database credentials are now in the secret
+mysqlRootPassword: ""
+mysqlUser: ""
+mysqlPassword: ""
+mysqlDatabase: ""
 
 # Service configuration
 service:
@@ -22,14 +22,14 @@ storage:
   storageClass: "microk8s-hostpath"
   accessMode: ReadWriteOnce
   size: 10Gi
-  name: mysql-data  # Important! Ensures volume and PVC have a valid name
+  name: mysql-data  # ensures PVC/volume have a valid name
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
 
-# Secure config / existing secret
+# Use the existing Kubernetes Secret
 settings:
-  existingSecret: ""  # leave empty to auto-generate secrets
+  existingSecret: "mysql-secret"
 
 # ServiceAccount block
 serviceAccount:
